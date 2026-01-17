@@ -5,8 +5,6 @@
 **Date:** January 17, 2026  
 **Purpose:** Comprehensive demonstration of all mobile-responsive web design techniques
 
----
-
 ## Table of Contents
 
 1. [Project Background](#project-background)
@@ -21,8 +19,6 @@
 10. [Performance Considerations](#performance-considerations)
 11. [Deployment](#deployment)
 12. [Customization Guide](#customization-guide)
-
----
 
 ## Project Background
 
@@ -42,8 +38,6 @@ The demo was built using a **mobile-first approach**, following modern web stand
 3. ✅ Implement accessible navigation and interactive components
 4. ✅ Provide copy-paste ready code snippets for production use
 5. ✅ Maintain clean separation of concerns (HTML, SCSS, TypeScript)
-
----
 
 ## Features Demonstrated
 
@@ -80,8 +74,6 @@ The demo was built using a **mobile-first approach**, following modern web stand
 - **Reduced motion** - Respects `prefers-reduced-motion` setting
 - **Color contrast** - WCAG AA compliant contrast ratios
 - **Touch targets** - Minimum 44px touch target sizes
-
----
 
 ## App Structure & Architecture
 
@@ -170,8 +162,6 @@ User Action (Resize, Click, Navigate)
 └─────────────────────────┘
 ```
 
----
-
 ## Technology Stack
 
 ### Frontend
@@ -190,8 +180,6 @@ User Action (Resize, Click, Navigate)
 ### No Framework Required
 
 This demo intentionally avoids frameworks (React, Vue, etc.) to show **pure** HTML/CSS/JavaScript implementations that work anywhere.
-
----
 
 ## Installation & Setup
 
