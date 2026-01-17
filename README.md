@@ -501,8 +501,6 @@ The app works on older browsers with degraded styling. Core functionality remain
 4. Use CDN for static assets
 5. Implement service worker for offline support
 
----
-
 ## Deployment
 
 ### Static Hosting (Recommended)
@@ -563,8 +561,6 @@ function enqueue_responsive_demo() {
 add_action('wp_enqueue_scripts', 'enqueue_responsive_demo');
 ```
 
----
-
 ## Customization Guide
 
 ### Changing Breakpoints
@@ -623,16 +619,12 @@ To simplify the demo, comment out sections:
 <!-- <section class="table-section">...</section> -->
 ```
 
----
-
 ## Additional Resources
 
 - **Full Reference Guide**: See `mobile_responsive.md` for complete documentation
 - **MDN Web Docs**: https://developer.mozilla.org/en-US/docs/Web/CSS
 - **Can I Use**: https://caniuse.com (check browser support)
 - **WCAG Guidelines**: https://www.w3.org/WAI/WCAG21/quickref/
-
----
 
 ## Credits
 
@@ -641,13 +633,9 @@ To simplify the demo, comment out sections:
 **GitHub:** https://github.com/rogerazlan  
 **Email:** roger@net1io.com
 
----
-
 ## License
 
 This demo is created for educational purposes and internal use by net1io.com development team. Feel free to use and modify for your projects.
-
----
 
 ## Changelog
 
@@ -656,9 +644,3 @@ This demo is created for educational purposes and internal use by net1io.com dev
 - Complete responsive design implementation
 - All HTML, SCSS, TypeScript components
 - Comprehensive documentation
-
----
-
-**Built with 💙 by Roger for the net1io.com team**
-
-*For questions or support, contact roger@net1io.com*
