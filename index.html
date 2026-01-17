@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ============================================
+         META TAGS - Essential for mobile responsiveness
+         ============================================ -->
+    <meta charset="UTF-8">
+    <!-- 
+        Critical viewport meta tag:
+        - width=device-width: Match screen width
+        - initial-scale=1.0: Start at 100% zoom
+        - maximum-scale=5.0: Allow zoom for accessibility
+        - user-scalable=yes: Enable pinch-to-zoom
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Complete responsive design demo showcasing all mobile-first techniques">
+    
+    <title>Responsive Design Demo | All Techniques</title>
+    
+    <!-- Preconnect for performance (if using external fonts/resources) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <!-- Compiled CSS from SCSS -->
+    <link rel="stylesheet" href="frontend/css/styles.css">
+</head>
+<body>
+    <!-- 
+        Skip link for accessibility 
+        Allows keyboard users to skip navigation
+    -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- ============================================
+         RESPONSIVE NAVIGATION
+         Demonstrates: Mobile hamburger menu, flexbox, media queries
+         ============================================ -->
+    <header class="header" role="banner">
+        <nav class="nav" role="navigation" aria-label="Main navigation">
+            <!-- Logo -->
+            <div class="nav-brand">
+                <a href="/" aria-label="Home">
+                    <img src="https://via.placeholder.com/120x40/333/fff?text=Logo" alt="Company Logo" width="120" height="40">
+                </a>
+            </div>
+            
+            <!-- Mobile menu toggle button -->
+            <button class="nav-toggle" 
+                    aria-expanded="false" 
+                    aria-controls="nav-menu"
+                    aria-label="Toggle navigation menu">
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+            </button>
+            
+            <!-- Navigation menu - stacks on mobile, horizontal on desktop -->
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#grid">Grid</a></li>
+                <li><a href="#typography">Typography</a></li>
+                <li><a href="#media">Media</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <main id="main" class="main-content" role="main">
+        
+        <!-- 
+            HERO SECTION
+            Demonstrates: Responsive images, fluid typography, clamp()
+        -->
+        <section class="hero" id="home" aria-labelledby="hero-heading">
+            <!-- 
+                Picture element for art direction
+                Different images at different breakpoints
+            -->
+            <picture>
+                <source media="(min-width: 1024px)" srcset="https://via.placeholder.com/1920x600/2196F3/fff?text=Desktop+Hero">
+                <source media="(min-width: 768px)" srcset="https://via.placeholder.com/1024x400/2196F3/fff?text=Tablet+Hero">
+                <img src="https://via.placeholder.com/800x400/2196F3/fff?text=Mobile+Hero" 
+                     alt="Hero banner" 
+                     width="1920" 
+                     height="600"
+                     class="hero-image">
+            </picture>
+            
+            <div class="hero-content">
+                <!-- Fluid typography using clamp() -->
+                <h1 id="hero-heading" class="hero-title">
+                    Responsive Design Demo
+                </h1>
+                <p class="hero-subtitle">
+                    Showcasing all mobile-first responsive techniques
+                </p>
+                <div class="hero-actions">
+                    <a href="#features" class="button button-primary">Explore Features</a>
+                    <a href="#grid" class="button button-secondary">View Grid</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            BREAKPOINT INDICATOR
+            Shows current breakpoint (powered by TypeScript)
+        -->
+        <div class="breakpoint-indicator" id="breakpoint-indicator">
+            <span class="breakpoint-label">Current Breakpoint:</span>
+            <span class="breakpoint-value" id="current-breakpoint">xs</span>
+            <span class="viewport-dimensions" id="viewport-dimensions">0x0</span>
+        </div>
+
+        <!-- 
+            FEATURES SECTION
+            Demonstrates: Flexbox responsive cards with wrapping
+        -->
+        <section class="section features-section" id="features" aria-labelledby="features-heading">
+            <div class="container">
+                <h2 id="features-heading" class="section-title">Flexbox Card Layout</h2>
+                <p class="section-description">
+                    Cards wrap naturally using flexbox. Resize to see them reflow from 1-4 columns.
+                </p>
+                
+                <!-- Flexbox container - items wrap automatically -->
+                <div class="flex-cards">
+                    <article class="card">
+                        <div class="card-icon">📱</div>
+                        <h3 class="card-title">Mobile First</h3>
+                        <p class="card-text">Built from the ground up for mobile devices, then enhanced for larger screens.</p>
+                    </article>
+                    
+                    <article class="card">
+                        <div class="card-icon">🎨</div>
+                        <h3 class="card-title">Fluid Typography</h3>
+                        <p class="card-text">Text scales smoothly using clamp() with no breakpoint jumps.</p>
+                    </article>
+                    
+                    <article class="card">
+                        <div class="card-icon">📐</div>
+                        <h3 class="card-title">CSS Grid</h3>
+                        <p class="card-text">Auto-fit and auto-fill for responsive grids without media queries.</p>
+                    </article>
+                    
+                    <article class="card">
+                        <div class="card-icon">🖼️</div>
+                        <h3 class="card-title">Responsive Images</h3>
+                        <p class="card-text">Picture element serves different images at different viewport sizes.</p>
+                    </article>
+                    
+                    <article class="card">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">Performance</h3>
+                        <p class="card-text">Optimized with lazy loading, modern formats, and efficient layouts.</p>
+                    </article>
+                    
+                    <article class="card">
+                        <div class="card-icon">♿</div>
+                        <h3 class="card-title">Accessible</h3>
+                        <p class="card-text">WCAG compliant with semantic HTML, ARIA labels, and keyboard navigation.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            GRID SECTION
+            Demonstrates: CSS Grid with auto-fit, minmax, named areas
+        -->
+        <section class="section grid-section" id="grid" aria-labelledby="grid-heading">
+            <div class="container">
+                <h2 id="grid-heading" class="section-title">CSS Grid Layouts</h2>
+                
+                <!-- Auto-fit grid - no media queries needed -->
+                <h3 class="subsection-title">Auto-fit Grid (No Media Queries)</h3>
+                <p class="section-description">
+                    Grid items automatically adjust from 1-4 columns based on available space using auto-fit and minmax().
+                </p>
+                
+                <div class="auto-grid">
+                    <div class="grid-item">Item 1</div>
+                    <div class="grid-item">Item 2</div>
+                    <div class="grid-item">Item 3</div>
+                    <div class="grid-item">Item 4</div>
+                    <div class="grid-item">Item 5</div>
+                    <div class="grid-item">Item 6</div>
+                </div>
+
+                <!-- Named grid areas - layout changes with media queries -->
+                <h3 class="subsection-title">Named Grid Areas (Holy Grail Layout)</h3>
+                <p class="section-description">
+                    Stacked on mobile, sidebar layout on tablet+, three-column on desktop. Resize to see the transformation.
+                </p>
+                
+                <!-- 
+                    Grid layout with named areas
+                    Mobile: Stacked vertically
+                    Tablet: Sidebar + Main
+                    Desktop: Sidebar + Main + Aside
+                -->
+                <div class="holy-grail">
+                    <header class="hg-header">Header</header>
+                    <nav class="hg-nav">Navigation</nav>
+                    <main class="hg-main">
+                        <h4>Main Content</h4>
+                        <p>This layout demonstrates CSS Grid named areas. The layout changes completely at different breakpoints.</p>
+                        <p><strong>Mobile:</strong> All stacked vertically</p>
+                        <p><strong>Tablet (768px+):</strong> Nav sidebar + Main content</p>
+                        <p><strong>Desktop (1024px+):</strong> Nav + Main + Ads in three columns</p>
+                    </main>
+                    <aside class="hg-ads">Sidebar</aside>
+                    <footer class="hg-footer">Footer</footer>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            TYPOGRAPHY SECTION
+            Demonstrates: Fluid typography, optimal line length, responsive text
+        -->
+        <section class="section typography-section" id="typography" aria-labelledby="typography-heading">
+            <div class="container">
+                <h2 id="typography-heading" class="section-title">Fluid Typography</h2>
+                
+                <!-- 
+                    Readable text container
+                    Max-width using ch units for optimal reading (60-75 characters per line)
+                -->
+                <div class="readable-content">
+                    <p class="lead-text">
+                        This is lead text using fluid sizing with clamp(). It scales smoothly from mobile to desktop without breakpoint jumps.
+                    </p>
+                    
+                    <h3>All Heading Levels with Fluid Sizing</h3>
+                    <h1>Heading 1 - clamp(2rem, 5vw + 1rem, 4rem)</h1>
+                    <h2>Heading 2 - clamp(1.75rem, 4vw + 0.75rem, 3rem)</h2>
+                    <h3>Heading 3 - clamp(1.5rem, 3vw + 0.5rem, 2.5rem)</h3>
+                    <h4>Heading 4 - clamp(1.25rem, 2vw + 0.5rem, 2rem)</h4>
+                    <h5>Heading 5 - clamp(1.125rem, 1.5vw + 0.5rem, 1.5rem)</h5>
+                    <h6>Heading 6 - clamp(1rem, 1vw + 0.5rem, 1.25rem)</h6>
+                    
+                    <p>
+                        Regular paragraph text with optimal line length. The max-width is set to 65ch (characters), 
+                        which is the sweet spot for readability. Studies show that 60-75 characters per line is easiest to read.
+                    </p>
+                    
+                    <p>
+                        <strong>Strong text for emphasis.</strong> The body text uses fluid sizing: clamp(1rem, 1vw + 0.5rem, 1.125rem).
+                        This means it starts at 16px on mobile, scales with the viewport, and never exceeds 18px on large screens.
+                    </p>
+                    
+                    <p>
+                        <small>Small text also scales fluidly: clamp(0.875rem, 0.5vw + 0.5rem, 1rem)</small>
+                    </p>
+
+                    <blockquote class="blockquote">
+                        "Good typography is invisible. Great typography is felt, not seen."
+                        <cite>— Design Principle</cite>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            RESPONSIVE UNITS DEMONSTRATION
+            Shows all CSS units in action
+        -->
+        <section class="section units-section">
+            <div class="container">
+                <h2 class="section-title">Responsive Units in Action</h2>
+                
+                <div class="units-demo">
+                    <div class="unit-example">
+                        <h4>Viewport Width (vw)</h4>
+                        <div class="box" style="width: 50vw; background: #e3f2fd;">
+                            50vw = 50% of viewport width
+                        </div>
+                    </div>
+                    
+                    <div class="unit-example">
+                        <h4>Viewport Height (vh)</h4>
+                        <div class="box" style="height: 20vh; background: #f3e5f5;">
+                            20vh = 20% of viewport height
+                        </div>
+                    </div>
+                    
+                    <div class="unit-example">
+                        <h4>REM Units</h4>
+                        <div class="box" style="padding: 2rem; background: #fff3e0;">
+                            2rem padding (relative to root font-size: 16px = 32px)
+                        </div>
+                    </div>
+                    
+                    <div class="unit-example">
+                        <h4>CH Units (Character Width)</h4>
+                        <div class="box" style="max-width: 40ch; background: #e8f5e9;">
+                            40ch max-width (40 characters wide - perfect for short text)
+                        </div>
+                    </div>
+                    
+                    <div class="unit-example">
+                        <h4>Clamp Function</h4>
+                        <div class="box" style="font-size: clamp(1rem, 3vw, 2rem); background: #fce4ec;">
+                            Font size: clamp(1rem, 3vw, 2rem) - scales smoothly
+                        </div>
+                    </div>
+                    
+                    <div class="unit-example">
+                        <h4>Min/Max Functions</h4>
+                        <div class="box" style="width: min(90%, 600px); background: #e0f2f1;">
+                            width: min(90%, 600px) - never wider than 90% OR 600px
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            MEDIA SECTION
+            Demonstrates: Responsive images, videos, aspect ratios
+        -->
+        <section class="section media-section" id="media" aria-labelledby="media-heading">
+            <div class="container">
+                <h2 id="media-heading" class="section-title">Responsive Media</h2>
+                
+                <!-- Responsive images with object-fit -->
+                <h3 class="subsection-title">Image Object-fit Demo</h3>
+                <div class="image-grid">
+                    <figure class="image-example">
+                        <div class="image-container">
+                            <img src="https://via.placeholder.com/400x600/FF5722/fff?text=Tall+Image" 
+                                 alt="Object-fit cover demo" 
+                                 style="object-fit: cover;">
+                        </div>
+                        <figcaption>object-fit: cover</figcaption>
+                    </figure>
+                    
+                    <figure class="image-example">
+                        <div class="image-container">
+                            <img src="https://via.placeholder.com/400x600/4CAF50/fff?text=Tall+Image" 
+                                 alt="Object-fit contain demo" 
+                                 style="object-fit: contain;">
+                        </div>
+                        <figcaption>object-fit: contain</figcaption>
+                    </figure>
+                    
+                    <figure class="image-example">
+                        <div class="image-container">
+                            <img src="https://via.placeholder.com/400x600/2196F3/fff?text=Tall+Image" 
+                                 alt="Object-fit fill demo" 
+                                 style="object-fit: fill;">
+                        </div>
+                        <figcaption>object-fit: fill</figcaption>
+                    </figure>
+                </div>
+
+                <!-- Aspect ratio boxes -->
+                <h3 class="subsection-title">Aspect Ratio Examples</h3>
+                <div class="aspect-ratio-grid">
+                    <div class="aspect-box ratio-16-9">
+                        <span>16:9 Widescreen</span>
+                    </div>
+                    <div class="aspect-box ratio-4-3">
+                        <span>4:3 Traditional</span>
+                    </div>
+                    <div class="aspect-box ratio-1-1">
+                        <span>1:1 Square</span>
+                    </div>
+                </div>
+
+                <!-- Responsive video embed -->
+                <h3 class="subsection-title">Responsive Video Embed</h3>
+                <p class="section-description">
+                    Maintains 16:9 aspect ratio at all sizes. Try resizing the window.
+                </p>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="Responsive video embed demo"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            RESPONSIVE TABLE
+            Demonstrates: Two strategies - horizontal scroll and card layout
+        -->
+        <section class="section table-section">
+            <div class="container">
+                <h2 class="section-title">Responsive Tables</h2>
+                
+                <!-- Strategy 1: Horizontal scroll on mobile -->
+                <h3 class="subsection-title">Horizontal Scroll Table</h3>
+                <p class="section-description">
+                    Swipe to scroll on mobile devices. Table maintains structure.
+                </p>
+                <div class="table-wrapper">
+                    <table class="responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Widget Alpha</td>
+                                <td>$29.99</td>
+                                <td>150</td>
+                                <td>Widgets</td>
+                                <td><span class="badge badge-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td>Gadget Beta</td>
+                                <td>$49.99</td>
+                                <td>75</td>
+                                <td>Gadgets</td>
+                                <td><span class="badge badge-warning">Low Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tool Gamma</td>
+                                <td>$89.99</td>
+                                <td>0</td>
+                                <td>Tools</td>
+                                <td><span class="badge badge-danger">Out of Stock</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Strategy 2: Card layout on mobile -->
+                <h3 class="subsection-title">Card Layout Table (Mobile)</h3>
+                <p class="section-description">
+                    Transforms into cards on mobile. View on small screen to see the effect.
+                </p>
+                <table class="card-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Name">John Doe</td>
+                            <td data-label="Email">john@example.com</td>
+                            <td data-label="Phone">(555) 123-4567</td>
+                            <td data-label="Status"><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Name">Jane Smith</td>
+                            <td data-label="Email">jane@example.com</td>
+                            <td data-label="Phone">(555) 987-6543</td>
+                            <td data-label="Status"><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Name">Bob Johnson</td>
+                            <td data-label="Email">bob@example.com</td>
+                            <td data-label="Phone">(555) 456-7890</td>
+                            <td data-label="Status"><span class="badge badge-warning">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 
+            INTERACTIVE DEMO
+            Shows TypeScript breakpoint detection in action
+        -->
+        <section class="section interactive-section">
+            <div class="container">
+                <h2 class="section-title">Live Breakpoint Detection</h2>
+                <p class="section-description">
+                    Powered by TypeScript. Resize your browser window to see breakpoint changes in real-time.
+                </p>
+                
+                <div class="breakpoint-display" id="breakpoint-display">
+                    <div class="breakpoint-info">
+                        <h3>Current Device:</h3>
+                        <p class="device-type" id="device-type">Desktop</p>
+                    </div>
+                    <div class="breakpoint-info">
+                        <h3>Orientation:</h3>
+                        <p class="orientation" id="orientation">Landscape</p>
+                    </div>
+                    <div class="breakpoint-info">
+                        <h3>Viewport Size:</h3>
+                        <p class="viewport-size" id="viewport-size">1920 x 1080</p>
+                    </div>
+                    <div class="breakpoint-info">
+                        <h3>Touch Device:</h3>
+                        <p class="touch-device" id="touch-device">No</p>
+                    </div>
+                </div>
+
+                <!-- Breakpoint history log -->
+                <div class="breakpoint-log">
+                    <h3>Breakpoint Change History:</h3>
+                    <ul id="breakpoint-log" class="log-list">
+                        <li>Page loaded...</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 
+        FOOTER
+        Demonstrates: Responsive footer layout
+    -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>About</h4>
+                    <p>Comprehensive responsive design demo showcasing modern CSS and TypeScript techniques.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#grid">Grid</a></li>
+                        <li><a href="#typography">Typography</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#media">Media</a></li>
+                        <li><a href="mobile_responsive.md">Documentation</a></li>
+                        <li><a href="https://github.com">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <p>roger@net1io.com</p>
+                    <p>Ubud, Bali, Indonesia</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Roger (Mohd Azlan Abas). All rights reserved. | Built for net1io.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+        JavaScript - TypeScript compiled to JS
+        Handles breakpoint detection, navigation, and interactive features
+    -->
+    <script src="frontend/js/app.js"></script>
+</body>
+</html>

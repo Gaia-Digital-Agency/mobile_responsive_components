@@ -1,0 +1,1225 @@
+// ============================================
+// RESPONSIVE DEMO - MAIN STYLESHEET (SCSS)
+// Demonstrates all responsive design techniques
+// ============================================
+
+// ============================================
+// VARIABLES & CONFIGURATION
+// ============================================
+
+// Breakpoints map - defines all responsive breakpoints
+$breakpoints: (
+    'xs': 0,        // Mobile phones (default)
+    'sm': 576px,    // Large phones
+    'md': 768px,    // Tablets
+    'lg': 1024px,   // Small laptops
+    'xl': 1280px,   // Desktops
+    'xxl': 1536px   // Large desktops
+);
+
+// Container widths for each breakpoint
+$container-widths: (
+    'sm': 540px,
+    'md': 720px,
+    'lg': 960px,
+    'xl': 1140px,
+    'xxl': 1320px
+);
+
+// Color palette
+$color-primary: #2196F3;
+$color-secondary: #FF5722;
+$color-success: #4CAF50;
+$color-warning: #FF9800;
+$color-danger: #F44336;
+$color-text: #333333;
+$color-text-light: #666666;
+$color-background: #ffffff;
+$color-gray-light: #f5f5f5;
+$color-border: #e0e0e0;
+
+// Spacing scale (using 8px base)
+$spacing-xs: 0.5rem;   // 8px
+$spacing-sm: 1rem;     // 16px
+$spacing-md: 1.5rem;   // 24px
+$spacing-lg: 2rem;     // 32px
+$spacing-xl: 3rem;     // 48px
+$spacing-xxl: 4rem;    // 64px
+
+// Typography scale
+$type-scale: (
+    'xs': (min: 12px, max: 14px),
+    'sm': (min: 14px, max: 16px),
+    'base': (min: 16px, max: 18px),
+    'lg': (min: 18px, max: 20px),
+    'xl': (min: 20px, max: 24px),
+    '2xl': (min: 24px, max: 32px),
+    '3xl': (min: 32px, max: 48px),
+    '4xl': (min: 40px, max: 64px)
+);
+
+// Grid configuration
+$grid-columns: 12;
+$grid-gutter: 1rem;
+
+// Z-index layers
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// ============================================
+// FUNCTIONS
+// ============================================
+
+// Strip unit from number
+@function strip-unit($number) {
+    @if type-of($number) == 'number' and not unitless($number) {
+        @return $number / ($number * 0 + 1);
+    }
+    @return $number;
+}
+
+// Fluid sizing function - creates smooth scaling between min and max
+@function fluid($min-size, $max-size, $min-vw: 320px, $max-vw: 1200px) {
+    $min-size: strip-unit($min-size);
+    $max-size: strip-unit($max-size);
+    $min-vw: strip-unit($min-vw);
+    $max-vw: strip-unit($max-vw);
+    
+    // Calculate slope
+    $slope: ($max-size - $min-size) / ($max-vw - $min-vw);
+    $y-axis-intersection: -$min-vw * $slope + $min-size;
+    
+    @return clamp(
+        #{$min-size}px,
+        #{$y-axis-intersection}px + #{$slope * 100}vw,
+        #{$max-size}px
+    );
+}
+
+// Get font size from typography scale
+@function font-size($size) {
+    @if map-has-key($type-scale, $size) {
+        $scale: map-get($type-scale, $size);
+        @return fluid(map-get($scale, 'min'), map-get($scale, 'max'));
+    }
+    @return 1rem;
+}
+
+// ============================================
+// MIXINS
+// ============================================
+
+// Mobile-first breakpoint mixin (min-width)
+@mixin breakpoint($size) {
+    @if map-has-key($breakpoints, $size) {
+        $breakpoint-value: map-get($breakpoints, $size);
+        
+        @if $breakpoint-value == 0 {
+            @content;
+        } @else {
+            @media screen and (min-width: $breakpoint-value) {
+                @content;
+            }
+        }
+    } @else {
+        @warn "Breakpoint #{$size} not found in $breakpoints map.";
+    }
+}
+
+// Desktop-first breakpoint mixin (max-width)
+@mixin breakpoint-max($size) {
+    @if map-has-key($breakpoints, $size) {
+        $breakpoint-value: map-get($breakpoints, $size);
+        
+        @media screen and (max-width: $breakpoint-value - 1px) {
+            @content;
+        }
+    }
+}
+
+// Fluid font-size mixin
+@mixin fluid-font($min, $max, $min-vw: 320px, $max-vw: 1200px) {
+    font-size: fluid($min, $max, $min-vw, $max-vw);
+}
+
+// Fluid spacing mixin
+@mixin fluid-space($property, $min, $max, $min-vw: 320px, $max-vw: 1200px) {
+    #{$property}: fluid($min, $max, $min-vw, $max-vw);
+}
+
+// Font size from scale mixin
+@mixin font-size($size) {
+    font-size: font-size($size);
+}
+
+// Aspect ratio mixin (with fallback for older browsers)
+@mixin aspect-ratio($width, $height) {
+    aspect-ratio: #{$width} / #{$height};
+    
+    // Fallback for older browsers
+    @supports not (aspect-ratio: 1 / 1) {
+        position: relative;
+        padding-bottom: percentage($height / $width);
+        height: 0;
+        
+        > * {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+// Hover capability mixin (only applies hover on devices that support it)
+@mixin hover-capable {
+    @media (hover: hover) and (pointer: fine) {
+        @content;
+    }
+}
+
+// ============================================
+// RESET & BASE STYLES
+// ============================================
+
+// Modern CSS reset
+*,
+*::before,
+*::after {
+    box-sizing: border-box;  // Include padding/border in width calculation
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;  // Base font size for rem calculations (1rem = 16px)
+    scroll-behavior: smooth;  // Smooth scrolling for anchor links
+    -webkit-text-size-adjust: 100%;  // Prevent font size adjustment on iOS
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    min-height: 100vh;  // Minimum full viewport height
+    line-height: 1.6;   // Optimal line height for readability
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    @include font-size('base');  // Fluid base font size
+    color: $color-text;
+    background-color: $color-background;
+    -webkit-font-smoothing: antialiased;  // Better font rendering
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Make images responsive by default
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;  // Never exceed parent width
+    height: auto;     // Maintain aspect ratio
+}
+
+// Inherit fonts for form elements
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+// Remove list styles
+ul,
+ol {
+    list-style: none;
+}
+
+// Remove default link underline
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+// ============================================
+// SKIP LINK (Accessibility)
+// ============================================
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: $color-primary;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+    
+    &:focus {
+        top: 0;  // Show when focused (keyboard navigation)
+    }
+}
+
+// ============================================
+// CONTAINER SYSTEM
+// ============================================
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: $grid-gutter;
+    padding-right: $grid-gutter;
+    
+    // Apply max-widths at each breakpoint
+    @each $breakpoint, $width in $container-widths {
+        @include breakpoint($breakpoint) {
+            max-width: $width;
+        }
+    }
+}
+
+// ============================================
+// TYPOGRAPHY SYSTEM
+// ============================================
+
+// Headings with fluid sizing
+h1 {
+    @include font-size('4xl');  // clamp(40px, ..., 64px)
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+
+h2 {
+    @include font-size('3xl');  // clamp(32px, ..., 48px)
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+
+h3 {
+    @include font-size('2xl');  // clamp(24px, ..., 32px)
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+
+h4 {
+    @include font-size('xl');   // clamp(20px, ..., 24px)
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+h5 {
+    @include font-size('lg');   // clamp(18px, ..., 20px)
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+h6 {
+    @include font-size('base'); // clamp(16px, ..., 18px)
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+p {
+    margin-bottom: 1em;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+small {
+    @include font-size('sm');
+}
+
+// ============================================
+// HEADER & NAVIGATION
+// Demonstrates: Flexbox, responsive menu, mobile-first approach
+// ============================================
+
+.header {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;  // Sticks to top on scroll
+    top: 0;
+    z-index: $z-index-sticky;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-sm;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nav-brand {
+    z-index: 2;  // Stay above menu overlay
+    
+    img {
+        display: block;
+    }
+}
+
+// Mobile hamburger toggle button
+.nav-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 2;
+    
+    // Hamburger lines
+    .hamburger {
+        width: 25px;
+        height: 3px;
+        background: $color-text;
+        transition: all 0.3s;
+    }
+    
+    // Animate to X when active
+    &.is-active {
+        .hamburger:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+    }
+    
+    // Hide on desktop (768px and up)
+    @include breakpoint('md') {
+        display: none;
+    }
+}
+
+// Navigation menu
+.nav-menu {
+    // Mobile: Full-screen overlay (off-screen by default)
+    position: fixed;
+    top: 0;
+    left: -100%;  // Off-screen
+    width: 100%;
+    height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;  // Stack vertically on mobile
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-lg;
+    transition: left 0.3s ease-in-out;
+    z-index: 1;
+    
+    // When menu is open
+    &.is-open {
+        left: 0;  // Slide in from left
+    }
+    
+    li {
+        font-size: 1.5rem;
+    }
+    
+    a {
+        color: $color-text;
+        padding: $spacing-sm;
+        display: block;
+        transition: color 0.2s;
+        
+        &:hover {
+            color: $color-primary;
+        }
+    }
+    
+    // Desktop: Horizontal menu (768px and up)
+    @include breakpoint('md') {
+        position: static;  // Remove fixed positioning
+        left: auto;
+        height: auto;
+        width: auto;
+        flex-direction: row;  // Horizontal layout
+        gap: $spacing-md;
+        background: transparent;
+        
+        li {
+            font-size: 1rem;
+        }
+    }
+}
+
+// ============================================
+// HERO SECTION
+// Demonstrates: Picture element, fluid typography, clamp()
+// ============================================
+
+.hero {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    
+    // Responsive height using viewport units
+    @include breakpoint('md') {
+        min-height: 500px;
+    }
+    
+    @include breakpoint('lg') {
+        min-height: 600px;
+    }
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  // Cover entire area while maintaining aspect ratio
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    padding: $spacing-lg;
+    max-width: 800px;
+}
+
+.hero-title {
+    @include font-size('4xl');  // Fluid sizing
+    margin-bottom: $spacing-md;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+    @include font-size('xl');
+    margin-bottom: $spacing-lg;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: center;
+    flex-wrap: wrap;  // Wrap buttons on small screens
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+
+.button {
+    display: inline-block;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: 4px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 2px solid transparent;
+    
+    &-primary {
+        background: $color-primary;
+        color: white;
+        
+        @include hover-capable {
+            &:hover {
+                background: darken($color-primary, 10%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+    
+    &-secondary {
+        background: transparent;
+        color: white;
+        border-color: white;
+        
+        @include hover-capable {
+            &:hover {
+                background: white;
+                color: $color-primary;
+            }
+        }
+    }
+}
+
+// ============================================
+// BREAKPOINT INDICATOR
+// Shows current breakpoint (powered by TypeScript)
+// ============================================
+
+.breakpoint-indicator {
+    position: fixed;
+    bottom: $spacing-sm;
+    right: $spacing-sm;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: $spacing-sm;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    z-index: 9999;
+    display: flex;
+    gap: $spacing-xs;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    .breakpoint-value {
+        font-weight: bold;
+        color: $color-primary;
+        text-transform: uppercase;
+    }
+    
+    .viewport-dimensions {
+        opacity: 0.7;
+        font-size: 0.75rem;
+    }
+}
+
+// ============================================
+// SECTION STYLES
+// ============================================
+
+.section {
+    @include fluid-space(padding-top, 2rem, 4rem);    // Fluid top padding
+    @include fluid-space(padding-bottom, 2rem, 4rem); // Fluid bottom padding
+    
+    &:nth-child(even) {
+        background: $color-gray-light;  // Alternate background color
+    }
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+    color: $color-primary;
+}
+
+.subsection-title {
+    margin-top: $spacing-lg;
+    margin-bottom: $spacing-md;
+}
+
+.section-description {
+    text-align: center;
+    color: $color-text-light;
+    max-width: 65ch;  // Optimal reading width (60-75 characters)
+    margin: 0 auto $spacing-lg;
+}
+
+// ============================================
+// FLEXBOX CARD LAYOUT
+// Demonstrates: Flexbox with wrapping, flex basis
+// ============================================
+
+.flex-cards {
+    display: flex;
+    flex-wrap: wrap;  // Allow cards to wrap to next line
+    gap: $spacing-lg;
+}
+
+.card {
+    // Flexible sizing: grow, shrink, base width
+    // Cards will be minimum 280px wide and grow to fill space
+    flex: 1 1 280px;
+    background: white;
+    border-radius: 8px;
+    padding: $spacing-lg;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    
+    // Only apply hover on devices that support it (not touch screens)
+    @include hover-capable {
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+    }
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-sm;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: $spacing-sm;
+}
+
+.card-text {
+    color: $color-text-light;
+    line-height: 1.6;
+}
+
+// ============================================
+// CSS GRID LAYOUTS
+// Demonstrates: Auto-fit, minmax, named grid areas
+// ============================================
+
+// Auto-fit grid - no media queries needed!
+// Automatically adjusts columns based on available space
+.auto-grid {
+    display: grid;
+    // repeat(auto-fit, minmax(MIN, MAX))
+    // - auto-fit: collapse empty columns
+    // - minmax(250px, 1fr): minimum 250px, maximum equal distribution
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
+}
+
+.grid-item {
+    background: $color-primary;
+    color: white;
+    padding: $spacing-lg;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Holy Grail Layout with named grid areas
+.holy-grail {
+    display: grid;
+    gap: $spacing-sm;
+    min-height: 500px;
+    
+    // Mobile: Stack everything vertically
+    grid-template-areas:
+        "header"
+        "nav"
+        "main"
+        "ads"
+        "footer";
+    grid-template-rows: auto auto 1fr auto auto;
+    
+    // Tablet (768px+): Sidebar layout
+    @include breakpoint('md') {
+        grid-template-areas:
+            "header header"
+            "nav main"
+            "footer footer";
+        grid-template-columns: 200px 1fr;
+        grid-template-rows: auto 1fr auto;
+        
+        .hg-ads {
+            display: none;  // Hide ads on tablet
+        }
+    }
+    
+    // Desktop (1024px+): Three-column layout
+    @include breakpoint('lg') {
+        grid-template-areas:
+            "header header header"
+            "nav main ads"
+            "footer footer footer";
+        grid-template-columns: 200px 1fr 200px;
+        
+        .hg-ads {
+            display: block;  // Show ads on desktop
+        }
+    }
+}
+
+// Assign grid areas to elements
+.hg-header {
+    grid-area: header;
+    background: $color-primary;
+    color: white;
+    padding: $spacing-md;
+    border-radius: 4px;
+}
+
+.hg-nav {
+    grid-area: nav;
+    background: $color-secondary;
+    color: white;
+    padding: $spacing-md;
+    border-radius: 4px;
+}
+
+.hg-main {
+    grid-area: main;
+    background: white;
+    padding: $spacing-lg;
+    border-radius: 4px;
+    border: 2px solid $color-border;
+}
+
+.hg-ads {
+    grid-area: ads;
+    background: $color-success;
+    color: white;
+    padding: $spacing-md;
+    border-radius: 4px;
+}
+
+.hg-footer {
+    grid-area: footer;
+    background: $color-text;
+    color: white;
+    padding: $spacing-md;
+    border-radius: 4px;
+    text-align: center;
+}
+
+// ============================================
+// TYPOGRAPHY SECTION
+// Demonstrates: Optimal line length with ch units
+// ============================================
+
+.readable-content {
+    max-width: 65ch;  // 60-75 characters per line (optimal for reading)
+    margin: 0 auto;
+}
+
+.lead-text {
+    @include font-size('lg');
+    color: $color-text-light;
+    line-height: 1.75;
+}
+
+.blockquote {
+    border-left: 4px solid $color-primary;
+    padding-left: $spacing-lg;
+    margin: $spacing-lg 0;
+    font-style: italic;
+    color: $color-text-light;
+    
+    cite {
+        display: block;
+        margin-top: $spacing-sm;
+        font-style: normal;
+        font-size: 0.875rem;
+        color: $color-text;
+    }
+}
+
+// ============================================
+// RESPONSIVE UNITS DEMONSTRATION
+// ============================================
+
+.units-demo {
+    display: grid;
+    gap: $spacing-lg;
+    
+    @include breakpoint('md') {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.unit-example {
+    h4 {
+        margin-bottom: $spacing-sm;
+    }
+}
+
+.box {
+    padding: $spacing-md;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100px;
+}
+
+// ============================================
+// MEDIA SECTION
+// Demonstrates: Object-fit, aspect-ratio
+// ============================================
+
+.image-grid {
+    display: grid;
+    gap: $spacing-lg;
+    
+    // Responsive columns
+    @include breakpoint('md') {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.image-container {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: $color-gray-light;
+    
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+figcaption {
+    text-align: center;
+    margin-top: $spacing-sm;
+    font-weight: 600;
+    color: $color-text-light;
+}
+
+// Aspect ratio examples
+.aspect-ratio-grid {
+    display: grid;
+    gap: $spacing-lg;
+    
+    @include breakpoint('md') {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.aspect-box {
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    
+    &.ratio-16-9 {
+        @include aspect-ratio(16, 9);  // Widescreen
+    }
+    
+    &.ratio-4-3 {
+        @include aspect-ratio(4, 3);   // Traditional
+    }
+    
+    &.ratio-1-1 {
+        @include aspect-ratio(1, 1);   // Square
+    }
+}
+
+// Responsive video container
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;  // 16:9 aspect ratio (9/16 = 0.5625)
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: $spacing-lg;
+    
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+    }
+}
+
+// ============================================
+// RESPONSIVE TABLES
+// ============================================
+
+// Strategy 1: Horizontal scroll
+.table-wrapper {
+    overflow-x: auto;  // Enable horizontal scrolling
+    -webkit-overflow-scrolling: touch;  // Smooth scrolling on iOS
+    margin-bottom: $spacing-lg;
+}
+
+.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;  // Prevents table from becoming too narrow
+    background: white;
+    
+    th,
+    td {
+        padding: $spacing-sm $spacing-md;
+        text-align: left;
+        border-bottom: 1px solid $color-border;
+    }
+    
+    th {
+        background: $color-primary;
+        color: white;
+        font-weight: 600;
+    }
+    
+    tbody tr {
+        @include hover-capable {
+            &:hover {
+                background: $color-gray-light;
+            }
+        }
+    }
+}
+
+// Strategy 2: Card layout on mobile
+.card-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    
+    th,
+    td {
+        padding: $spacing-sm $spacing-md;
+        text-align: left;
+        border-bottom: 1px solid $color-border;
+    }
+    
+    th {
+        background: $color-primary;
+        color: white;
+        font-weight: 600;
+    }
+    
+    // Mobile: Transform into cards
+    @include breakpoint-max('md') {
+        thead {
+            display: none;  // Hide table headers
+        }
+        
+        tbody tr {
+            display: block;
+            margin-bottom: $spacing-md;
+            border: 1px solid $color-border;
+            border-radius: 8px;
+            padding: $spacing-md;
+            background: white;
+        }
+        
+        tbody td {
+            display: flex;
+            justify-content: space-between;
+            padding: $spacing-xs 0;
+            border: none;
+            
+            // Show label from data-label attribute
+            &::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: $spacing-sm;
+                color: $color-text;
+            }
+        }
+    }
+}
+
+// Badge components
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    
+    &-success {
+        background: lighten($color-success, 40%);
+        color: darken($color-success, 10%);
+    }
+    
+    &-warning {
+        background: lighten($color-warning, 40%);
+        color: darken($color-warning, 10%);
+    }
+    
+    &-danger {
+        background: lighten($color-danger, 40%);
+        color: darken($color-danger, 10%);
+    }
+}
+
+// ============================================
+// INTERACTIVE DEMO SECTION
+// ============================================
+
+.breakpoint-display {
+    display: grid;
+    gap: $spacing-lg;
+    background: white;
+    padding: $spacing-lg;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: $spacing-lg;
+    
+    @include breakpoint('md') {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include breakpoint('lg') {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.breakpoint-info {
+    text-align: center;
+    
+    h3 {
+        font-size: 1rem;
+        color: $color-text-light;
+        margin-bottom: $spacing-xs;
+    }
+    
+    p {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: $color-primary;
+        margin: 0;
+    }
+}
+
+.breakpoint-log {
+    background: white;
+    padding: $spacing-lg;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    h3 {
+        margin-bottom: $spacing-md;
+    }
+}
+
+.log-list {
+    max-height: 300px;
+    overflow-y: auto;
+    
+    li {
+        padding: $spacing-xs 0;
+        border-bottom: 1px solid $color-border;
+        font-size: 0.875rem;
+        
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+// ============================================
+// FOOTER
+// ============================================
+
+.footer {
+    background: $color-text;
+    color: white;
+    padding: $spacing-xl 0 $spacing-lg;
+}
+
+.footer-grid {
+    display: grid;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    
+    // Responsive footer columns
+    @include breakpoint('sm') {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include breakpoint('lg') {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.footer-column {
+    h4 {
+        margin-bottom: $spacing-sm;
+        color: $color-primary;
+    }
+    
+    p {
+        line-height: 1.8;
+        opacity: 0.9;
+    }
+    
+    ul {
+        li {
+            margin-bottom: $spacing-xs;
+            
+            a {
+                color: white;
+                opacity: 0.9;
+                transition: opacity 0.2s;
+                
+                &:hover {
+                    opacity: 1;
+                    color: $color-primary;
+                }
+            }
+        }
+    }
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+// ============================================
+// ACCESSIBILITY - REDUCED MOTION
+// ============================================
+
+// Disable animations for users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+    // Hide non-essential elements
+    .nav-toggle,
+    .breakpoint-indicator,
+    .footer {
+        display: none;
+    }
+    
+    // Optimize for print
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: black;
+        background: white;
+    }
+    
+    // Prevent page breaks inside elements
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+    
+    .card,
+    .grid-item {
+        page-break-inside: avoid;
+    }
+}
