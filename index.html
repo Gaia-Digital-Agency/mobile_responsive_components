@@ -39,7 +39,7 @@
             <!-- Logo -->
             <div class="nav-brand">
                 <a href="/" aria-label="Home">
-                    <img src="https://via.placeholder.com/120x40/333/fff?text=Logo" alt="Company Logo" width="120" height="40">
+                    <img src="assets/gaia_logo.jpeg" alt="Gaia Logo" class="nav-logo">
                 </a>
             </div>
             
@@ -74,19 +74,12 @@
             Demonstrates: Responsive images, fluid typography, clamp()
         -->
         <section class="hero" id="home" aria-labelledby="hero-heading">
-            <!-- 
-                Picture element for art direction
-                Different images at different breakpoints
-            -->
-            <picture>
-                <source media="(min-width: 1024px)" srcset="https://via.placeholder.com/1920x600/2196F3/fff?text=Desktop+Hero">
-                <source media="(min-width: 768px)" srcset="https://via.placeholder.com/1024x400/2196F3/fff?text=Tablet+Hero">
-                <img src="https://via.placeholder.com/800x400/2196F3/fff?text=Mobile+Hero" 
-                     alt="Hero banner" 
-                     width="1920" 
-                     height="600"
-                     class="hero-image">
-            </picture>
+            <!-- Hero logo for branding consistency -->
+            <div class="hero-logo-container">
+                <img src="assets/gaia_logo.jpeg"
+                     alt="Gaia Digital Agency"
+                     class="hero-logo">
+            </div>
             
             <div class="hero-content">
                 <!-- Fluid typography using clamp() -->

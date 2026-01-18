@@ -1,16 +1,15 @@
 {
-  "name": "responsive-demo",
+  "name": "knowledge-mobile-responsive-components",
   "version": "1.0.0",
   "description": "Complete responsive design demo with HTML, SCSS, and TypeScript",
-  "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "build:css": "sass frontend/css/styles.scss frontend/css/styles.css --no-source-map",
     "build:js": "tsc frontend/js/app.ts --outDir frontend/js --target ES2020 --module ES2020 --lib ES2020,DOM --skipLibCheck",
-    "build": "npm run build:css && npm run build:js",
     "watch:css": "sass --watch frontend/css/styles.scss:frontend/css/styles.css",
-    "watch:js": "tsc --watch frontend/js/app.ts --outDir frontend/js --target ES2020 --module ES2020 --lib ES2020,DOM --skipLibCheck",
-    "serve": "npx serve .",
-    "dev": "npm run build && npm run serve"
+    "watch:js": "tsc --watch frontend/js/app.ts --outDir frontend/js --target ES2020 --module ES2020 --lib ES2020,DOM --skipLibCheck"
   },
   "keywords": [
     "responsive",
@@ -23,6 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "sass": "^1.97.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^5.0.0"
   }
 }
